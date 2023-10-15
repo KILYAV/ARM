@@ -42,10 +42,10 @@ _ln_div:
 _argument:
 	push {r3-r4}
 	umulls r1, r0, r3, r3
-	lsr r1, #31
 	lsl r4, #1
-	orr r4, r4, r0, lsr #31
-	orrpl r0, r1, r0, lsl #1	
+	sub r4, r4, r0, lsr #31
+	lslpl r0, #1
+	orrpl r0, r1, lsr #31
 
 	mov r7, #2
 	adr r6, _ln_cons
