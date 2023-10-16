@@ -8,7 +8,7 @@ _start:
 // (x - 1) / (x + 1)
 	lsls r0, #9
 	add r3, r3, r0, lsr #31
-	push {r3-r7}
+	push {r3-r6}
 
 	asr r0, #1
 	lsr r1, r0, #8
@@ -46,24 +46,24 @@ _ln_div:
 	lslpl r0, #1
 	orrpl r0, r1, lsr #31
 
-	mov r7, #2
 	adr r6, _ln_cons
-	ldr r1, [r6, #12]
-	add r5, r4, r1, lsr #28
+	ldr r1, [r6], #4
+	
+	lsr r5, r1, #28
 	lsl r1, #8
 	
 _ln_mul:
 	umulls r2, r1, r1, r0
+	add r5, r4
 	sub r5, r1, lsr #31
 	lslpl r1, #1
 	orrpl r1, r2, lsr #31
-	ldr r2, [r6, r7, lsl #2]
+	ldr r2, [r6], #4
 	sub r3, r5, r2, asr #28
-	lsr r5, r2, #28
+	asrs r5, r2, #28
 	lsl r2, #8
 	lsr r1, r3
 	add r1, r2
-	subs r7, #1
 	bpl _ln_mul
 	
 _data:
@@ -76,9 +76,9 @@ _frac_div:
 	.word 0x49
 
 _ln_cons:
-	.word 0xf0b8aa3b
-	.word 0x10f638ab
-	.word 0x10938ea9
 	.word 0x20e0cecb
+	.word 0x10938ea9
+	.word 0x10f638ab
+	.word 0xf0b8aa3b
 
 	.word 0x00b17218
