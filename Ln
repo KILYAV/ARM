@@ -46,18 +46,21 @@ _ln_div:
 	orrpl r0, r1, lsr #31
 
 	adr r6, _ln_cons
+	ldr r5, [r6], #4
 	ldr r1, [r6], #4
-	add r5, r4, #1
-_ln_mul:
+_ln_mul_add:
 	umulls r2, r1, r1, r0
 	clz r3, r1
 	lsl r1, r3
-	add r5, r3
 	orrpl r1, r1, r2, lsr #31
+	
+	
+	
 	ldr r2, [r6], #4
-	sxtb 
+	lsr r1, r5
+	add r1, r2
 
-
+	b _ln_mul_add
 
 	add r5, r4
 	sub r5, r1, lsr #31
@@ -69,7 +72,7 @@ _ln_mul:
 	lsl r2, #8
 	lsr r1, r3
 	add r1, r2
-	bpl _ln_mul
+	bpl _ln_mul_add
 	
 _data:
 	.word 0x00400000
@@ -81,8 +84,10 @@ _frac_div:
 	.word 0x49
 
 _ln_cons:
+	.word 0x00000000
+	
 	.word 0xe0cecb00
-	.word 0x938ea901
+	.word 0x938ea900
 	.word 0xf638ab00
 	.word 0xb8aa3b00
 
