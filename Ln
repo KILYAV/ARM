@@ -40,19 +40,25 @@ _ln_div:
 // argument & argument^2
 	push {r3-r4}
 	umulls r1, r0, r3, r3
-	lsl r4, #1
-	sub r4, r4, r0, lsr #31
-	lslpl r0, #1
+	clz r2, r0
+	lsl r0, r2
+	add r4, r2, r4, lsl #1
 	orrpl r0, r1, lsr #31
 
 	adr r6, _ln_cons
 	ldr r1, [r6], #4
-	
-	lsr r5, r1, #28
-	lsl r1, #8
-	
+	add r5, r4, #1
 _ln_mul:
 	umulls r2, r1, r1, r0
+	clz r3, r1
+	lsl r1, r3
+	add r5, r3
+	orrpl r1, r1, r2, lsr #31
+	ldr r2, [r6], #4
+	sxtb 
+
+
+
 	add r5, r4
 	sub r5, r1, lsr #31
 	lslpl r1, #1
@@ -75,9 +81,9 @@ _frac_div:
 	.word 0x49
 
 _ln_cons:
-	.word 0x20e0cecb
-	.word 0x10938ea9
-	.word 0x10f638ab
-	.word 0xf0b8aa3b
+	.word 0xe0cecb00
+	.word 0x938ea901
+	.word 0xf638ab00
+	.word 0xb8aa3b00
 
 	.word 0x00b17218
