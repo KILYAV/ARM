@@ -3,7 +3,7 @@ _start:
 //
 	adr r11, _frac_div
 	ldr r0, _data
-	mov r3, #0x7f
+	mov r3, #0x80
 
 // (x - 1) / (x + 1)
 	lsls r0, #9
@@ -48,20 +48,33 @@ _ln_div:
 	adr r6, _ln_cons
 	ldr r5, [r6], #4
 	ldr r1, [r6], #4
-	
 _ln_mul_add:
-	umulls r2, r1, r1, r0
-	clz r3, r1
-	lsl r1, r3
-	orrpl r1, r1, r2, lsr #31
-	ldr r2, [r6], #4
-	add r3, r4
-	add r3, r5
-	lsrs r5, #8
-	sub r3, r5
+	umull r2, r1, r1, r0
+	add r3, r4, r5
 	lsr r1, r3
+	ldr r2, [r6], #4
 	add r1, r2
+	lsrs r5, #8
 	bne _ln_mul_add
+
+//
+	pop {r0, r4}
+	umull r2, r1, r1, r0
+	sub r4, #2
+	lsr r1, r4
+	lsls r4, #1	
+	
+	pop {r3-r6}
+	sub r3, #0x7f
+	clz r2, r3
+	lsl r3, r2
+	rsb r2, r2, #32
+	lsr r1, r2
+	subcs r0, r3, r1
+	addcc r0, r3, r1
+	clz r1, r0
+	lsl r0, r1
+	sub r2, r1
 	
 _data:
 	.word 0x00400000
@@ -73,11 +86,11 @@ _frac_div:
 	.word 0x49
 
 _ln_cons:
-	.word 0x00fe0101
+	.word 0x00020001
 	
 	.word 0xe0cecb00
 	.word 0x938ea900
 	.word 0xf638ab00
 	.word 0xb8aa3b00
 
-	.word 0x00b17218
+	.word 0xb1721800
