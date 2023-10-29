@@ -11,6 +11,7 @@ _start:
 	lsls r0, #9
 	add r3, r3, r0, lsr #31
 	push {r3-r6}
+	lsr r5, r0, #31
 
 	asr r0, #1
 	lsr r1, r0, #8
@@ -20,14 +21,13 @@ _start:
 
 	clz r4, r0
 	lsl r0, r4
-	orrmi r4, #0x80000000
 
 	cmp r0, r1, lsl #7
 	lsrpl r0, #1
 	addmi r4, #1
 	eor r3, r3
 	
-	
+// temp code	
 	lsr r0, #6
 _ln_div:
 	subs r0, r1
@@ -47,13 +47,13 @@ _ln_div:
 //	bpl _ln_div
 
 // argument & argument^2
-	push {r3-r4}
+	push {r3-r5}
 	umulls r1, r0, r3, r3
 	clz r2, r0
 	lsl r0, r2
 	add r4, r2, r4, lsl #1
 	orrpl r0, r1, lsr #31
-	cmp r4, #32
+	cmp r4, #30
 	ldrhs r1, _ln_cons + 16
 	bhs _ln_add_mul
 
@@ -71,32 +71,37 @@ _ln_mul_add:
 	bne _ln_mul_add
 
 _ln_add_mul:
-	pop {r0, r2}
+	pop {r0, r2-r4}
 	umull r1, r0, r1, r0
+	
+	subs r4, #0x7f
+	lsr r5, r4, #31
+	mvnmi r4, r4
+	addmi r4, #1
+
 	sub r2, #2
-	
-	pop {r3-r6}
-	sub r3, #0x7f
-	
-	clz r2, r3
-	lsl r3, r2
-	rsb r2, r2, #32
 	lsr r0, r2
-	subcs r0, r3, r0
-	addcc r0, r3, r0
-	clz r1, r0
-	lsl r0, r1
-	sub r2, r1
+	clz r2, r4
+	lsl r4, r2
+	rsb r2, #32
+	lsr r0, r2
+	
+	eors r3, r5
+	subne r0, r4, r0
+	addeq r0, r4, r0
 	
 	ldr r1, _ln_cons + 20
 	umull r1, r0, r1, r0
 	clz r1, r0
 	lsl r0, r1
 	sub r2, r1
- 
+	asr r0, #6
+	lsr r0, #2	
+	add r0, r2, lsl #24
+	orr r0, r5, lsl #31 
 
 _data:
-	.word 0x3f800001
+	.word 0x3fc00000
 
 _ln_cons:
 	.word 0x00020001
