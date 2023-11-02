@@ -95,9 +95,10 @@ _ln_add_mul:
 	clz r1, r0
 	lsl r0, r1
 	sub r2, r1
+ 	sub r2, #1
 	asr r0, #6
-	lsr r0, #2	
-	add r0, r2, lsl #24
+	lsr r0, #2
+	add r0, r2, lsl #23
 	orr r0, r5, lsl #31 
 
 _data:
