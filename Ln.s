@@ -75,17 +75,17 @@ _ln_add_mul:
 	sub r2, #2
 	umull r1, r0, r1, r0
 	subs r4, #0x7f
-	beq _ln_denorm
-	
 	lsr r5, r4, #31
 	mvnmi r4, r4
 	addmi r4, #1
 
-	lsr r0, r2
 	clz r6, r4
 	lsl r4, r6
 	rsb r6, #32
-	lsr r0, r6
+	lsrne r0, r6
+	lsrne r0, r2
+	moveq r5, r3
+	subeq r6, r2
 	
 	eors r3, r5
 	subne r0, r4, r0
@@ -95,32 +95,16 @@ _ln_add_mul:
 	umull r1, r0, r1, r0
 	clz r1, r0
 	lsl r0, r1
-	sub r2, r1
- 	sub r2, #1
+	sub r6, r1
+ 	sub r6, #1
 	asr r0, #6
 	lsr r0, #2
-	add r0, r2, lsl #23
+	add r0, r6, lsl #23
 	orr r0, r5, lsl #31 
-
-_ln_denorm:
-	ldr r1, _ln_cons + 20
-	umull r1, r0, r1, r0
-	
-	clz r1, r0
-	lsl r0, r1
-	tst r3, r3
-	rsbne r0, r0, #0
-	mvnne r0, r0
-	addne r0, #1
-	add r2, r1
-	add r2, #1
-	asr r0, #6
-	lsr r0, #2
-	sub r0, r2, lsl #23	
-	orr r0, r3, lsl #31 
+	pop {r4-r6}
 	
 _data:
-	.word 0x3f500000
+	.word 0x3f800001
 
 _ln_cons:
 	.word 0x00020001
