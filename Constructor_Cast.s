@@ -1,4 +1,3 @@
-.section .text
 .global _ZN6_floatC1Ef
 _ZN6_floatC1Ef:
 	str r1, [r0]
