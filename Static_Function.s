@@ -7,14 +7,14 @@ _ZN6_float3InfEv:
 // static _float SNan();
 .global _ZN6_float4SNanEv
 _ZN6_float4SNanEv:
-	mov r0, #0x7f800000
-	orr r0, #1
+	mov r0, #1
+	movt r0, #0x7f80
 	bx lr
 
 // static _float QNan();
 .global _ZN6_float4QNanEv
 _ZN6_float4QNanEv:
-	eor r0, r0
+	mov r0, #0
 	movt r0, #0x7fc0
 
 // static _float Hex(uint32_t);
