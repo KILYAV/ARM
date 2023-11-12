@@ -6,12 +6,11 @@ _Zeq6_floatS_:
 	eorne r0, r0
 	bxne lr
 
+	mov r0, #1
 	mov r2, #0xff000000
-	cmp r2, r0, lsl #1
-	itte lo
-	cmplo r2, r1, lsl #1
-	movlo r0, #0
-	movhs r0, #1
+	cmp r2, r1, lsl #1
+	it lo
+	movlo r0, #1
 	bx lr
 
 //	friend bool operator!= (_float, _float);
@@ -24,10 +23,10 @@ _Zne6_floatS_:
 	movlo r0, #1
 	bxlo lr
 
+	mov r0, #1
 	cmp r0, r1
-	ite eq
+	it eq
 	eoreq r0, r0
-	movne r0, #1
 	bx lr
 
 //	friend bool operator>= (_float, _float);
@@ -42,11 +41,10 @@ _Zge6_floatS_:
 _Zle6_floatS_:
 	cmp r0, r1
 	bne _Zlt6_floatS_
-	bic r0, #0x80000000
-	cmp r0, #0x7f800000
-	eor r0, r0
-	it ls
-	orrls r0, #1
+	mov r2, #0xff000000
+	add r2, #1
+	rsb r0, r2, r0, lsl #1
+	lsl r0, #31
 	bx lr
 
 //	friend bool operator< (_float, _float);
