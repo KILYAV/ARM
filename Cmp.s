@@ -6,9 +6,9 @@ _Zeq6_floatS_:
 	it ne
 	bxne lr
 
-	mov r0, #1
-	movt r0, #0xff00
-	rsb r0, r0, r1, lsl #1
+	lsl r1, #1
+	sub r0, r1, #0xff000000
+	sub r0, #1
 	lsr r0, #31
 	bx lr
 
